@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fiscai-yuki-api-connector"
+version = "1.0.0"
+description = "Plugin for Grok Bot (also works with Copilot, Claude, Cursor, Windsurf and other MCP clients): read-only access to the Yuki accounting API for Belgian accountants and business owners. Powered by FISCALCI Accounting & Tax (Askin Alci)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{name = "Askin Alci"}]
+keywords = ["mcp", "mcp-server", "model-context-protocol", "yuki", "visma", "accounting", "bookkeeping", "belgium", "vat", "read-only"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Natural Language :: Dutch",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Accounting",
+]
+dependencies = ["httpx>=0.27", "cryptography>=41"]
+
+[project.optional-dependencies]
+parquet = ["pyarrow"]
+
+[project.urls]
+Homepage = "https://github.com/MnrAlci/fiscai-yuki-api-connector"
+Documentation = "https://github.com/MnrAlci/fiscai-yuki-api-connector/tree/main/docs"
+Repository = "https://github.com/MnrAlci/fiscai-yuki-api-connector"
+Issues = "https://github.com/MnrAlci/fiscai-yuki-api-connector/issues"
+Changelog = "https://github.com/MnrAlci/fiscai-yuki-api-connector/blob/main/CHANGELOG.md"
+
+[project.scripts]
+yuki-api-connector = "yuki_mcp.cli:main"
+# Same name as the package, so `uvx fiscai-yuki-api-connector` starts the MCP server (stdio).
+fiscai-yuki-api-connector = "yuki_mcp.server:main"
+
+[tool.setuptools]
+packages = ["yuki_mcp", "yuki_core"]
+
+[tool.setuptools.package-dir]
+yuki_mcp = "server/yuki_mcp"
+yuki_core = "server/vendor/yuki_core"
+
+[tool.ruff]
+line-length = 140
+target-version = "py310"
+extend-exclude = ["server/vendor/yuki_core/_generated"]
+
+[tool.ruff.lint]
+select = ["E9", "F"]
+# Unused imports/variables are cleaned up step by step (see ROADMAP.md).
+ignore = ["F401", "F541", "F841"]
+
+[tool.pytest.ini_options]
+pythonpath = ["server", "server/vendor"]
+testpaths = ["tests"]
