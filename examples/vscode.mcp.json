@@ -1,0 +1,23 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "yuki-access-key",
+      "description": "Yuki access key (stored by VS Code, not in this file)",
+      "password": true
+    }
+  ],
+  "servers": {
+    "fiscai-yuki-api-connector": {
+      "type": "stdio",
+      "command": "/ABSOLUTE/PATH/TO/fiscai-yuki-api-connector/.venv/bin/python",
+      "args": [
+        "/ABSOLUTE/PATH/TO/fiscai-yuki-api-connector/server/run_server.py"
+      ],
+      "env": {
+        "YUKI_ACCESS_KEY": "${input:yuki-access-key}",
+        "YUKI_ACCESS_LEVEL": "domein"
+      }
+    }
+  }
+}
