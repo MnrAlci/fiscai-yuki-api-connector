@@ -1,0 +1,2353 @@
+{
+  "info": {
+    "_postman_id": "23f174a5-c40e-55b3-a792-e5db79d5c52a",
+    "name": "FISCAi Yuki API Connector",
+    "description": "Not an official Yuki or Visma product. A complementary, read-only collection aligned to the plugin's allow-list; the official reference is the Yuki API Webservices Documentation on Postman (https://documenter.getpostman.com/view/12207912/UVCBB51L). Intended for Belgian bookkeepers/accountants; based on Belgian accounting and VAT rules (MAR, Belgian VAT system). Use outside Belgium: verify the local rules yourself. Powered by FISCALCI Accounting & Tax (Askin Alci)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "session_id",
+      "value": "",
+      "type": "secret"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 Authentication",
+      "description": "Run this first. The test script stores the session in the collection variable session_id.",
+      "item": [
+        {
+          "name": "Accounting.Authenticate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Authenticate\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Authenticate xmlns=\"http://www.theyukicompany.com/\"><accessKey>{{yuki_access_key}}</accessKey></Authenticate>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Authenticate with your own access key (environment variable, secret).\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=Authenticate (verify current documentation)."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Stores the session id in a collection variable. Never logs or prints it.",
+                  "const m = pm.response.text().match(/<AuthenticateResult>([^<]+)<\\/AuthenticateResult>/);",
+                  "pm.test(\"Authenticate returned a session\", function () { pm.expect(m, \"no AuthenticateResult in response\").to.not.be.null; });",
+                  "if (m) { pm.collectionVariables.set(\"session_id\", m[1]); }"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "01 Accounting",
+      "description": "Read calls on Accounting.asmx.",
+      "item": [
+        {
+          "name": "Accounting.AdministrationID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/AdministrationID\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <AdministrationID xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationName>[Voorbeeld]</administrationName></AdministrationID>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Administratie-ID (GUID) bij een exacte administratienaam.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=AdministrationID (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.Administrations",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Administrations\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Administrations xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></Administrations>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Administrations reachable with the key (id, name, domain).\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=Administrations (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.AdministrationsWithInternalCustomerCode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/AdministrationsWithInternalCustomerCode\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <AdministrationsWithInternalCustomerCode xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></AdministrationsWithInternalCustomerCode>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Administrations with the internal customer code.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=AdministrationsWithInternalCustomerCode (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.CheckOutstandingItem",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/CheckOutstandingItem\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <CheckOutstandingItem xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><Reference>[Voorbeeld]</Reference></CheckOutstandingItem>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Open bedrag van één transactie via factuurnummer of ID (GUID). Zonder administratie: CheckOutstandingItem; met administratie: CheckOutstandingItemAdmin. Let op: een factuurnummer kan meerdere posten opleveren.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=CheckOutstandingItem (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.CheckOutstandingItemAdmin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/CheckOutstandingItemAdmin\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <CheckOutstandingItemAdmin xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><Reference>[Voorbeeld]</Reference></CheckOutstandingItemAdmin>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Open bedrag van één transactie via factuurnummer of ID (GUID). Zonder administratie: CheckOutstandingItem; met administratie: CheckOutstandingItemAdmin. Let op: een factuurnummer kan meerdere posten opleveren.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=CheckOutstandingItemAdmin (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.Companies",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Companies\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Companies xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></Companies>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Alle beschikbare administraties (Companies).\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=Companies (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.Domains",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Domains\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Domains xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></Domains>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Alle domeinen die met deze sleutel bereikbaar zijn.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=Domains (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.GLAccountBalance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GLAccountBalance\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GLAccountBalance xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><transactionDate>{{as_of_date}}</transactionDate></GLAccountBalance>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Trial balance per general ledger account (read).\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=GLAccountBalance (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.GLAccountBalanceFiscal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GLAccountBalanceFiscal\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GLAccountBalanceFiscal xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><transactionDate>{{as_of_date}}</transactionDate></GLAccountBalanceFiscal>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Fiscal variant of the trial balance.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=GLAccountBalanceFiscal (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.GLAccountBalanceYearEnd",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GLAccountBalanceYearEnd\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GLAccountBalanceYearEnd xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><transactionDate>{{as_of_date}}</transactionDate></GLAccountBalanceYearEnd>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Year-end variant of the trial balance.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=GLAccountBalanceYearEnd (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.GLAccountTransactions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GLAccountTransactions\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GLAccountTransactions xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><GLAccountCode>[Voorbeeld]</GLAccountCode><StartDate>{{start_date}}</StartDate><EndDate>{{end_date}}</EndDate></GLAccountTransactions>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Transacties van één grootboekrekening in een periode (oudere Accounting-variant; zie ook yuki_grootboekmutaties).\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=GLAccountTransactions (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.GLAccountTransactionsFiscal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GLAccountTransactionsFiscal\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GLAccountTransactionsFiscal xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><GLAccountCode>[Voorbeeld]</GLAccountCode><StartDate>{{start_date}}</StartDate><EndDate>{{end_date}}</EndDate></GLAccountTransactionsFiscal>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Transacties van één grootboekrekening in een periode (oudere Accounting-variant; zie ook yuki_grootboekmutaties).\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=GLAccountTransactionsFiscal (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.GetCurrentDomain",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetCurrentDomain\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetCurrentDomain xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></GetCurrentDomain>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Het huidige Yuki-domein van de sessie.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=GetCurrentDomain (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.NetRevenue",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/NetRevenue\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <NetRevenue xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><StartDate>{{start_date}}</StartDate><EndDate>{{end_date}}</EndDate></NetRevenue>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Net revenue between two dates.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=NetRevenue (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.NetRevenueFiscal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/NetRevenueFiscal\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <NetRevenueFiscal xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><StartDate>{{start_date}}</StartDate><EndDate>{{end_date}}</EndDate></NetRevenueFiscal>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Fiscal net revenue.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=NetRevenueFiscal (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.OutstandingCreditorItems",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/OutstandingCreditorItems\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <OutstandingCreditorItems xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><includeBankTransactions>false</includeBankTransactions><sortOrder>DateAsc</sortOrder></OutstandingCreditorItems>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Open creditor items.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=OutstandingCreditorItems (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.OutstandingCreditorItemsByDate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/OutstandingCreditorItemsByDate\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <OutstandingCreditorItemsByDate xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><includeBankTransactions>false</includeBankTransactions><sortOrder>ContactAsc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate></OutstandingCreditorItemsByDate>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Openstaande debiteuren- of crediteurenposten met factuurdatum tussen twee data; optioneel met betaalreferentie. Methodes: Accounting.Outstanding{Debtor|Creditor}ItemsByDate of ...WithPaymentReference.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=OutstandingCreditorItemsByDate (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.OutstandingCreditorItemsByDateOutstanding",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/OutstandingCreditorItemsByDateOutstanding\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <OutstandingCreditorItemsByDateOutstanding xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><includeBankTransactions>false</includeBankTransactions><sortOrder>DateAsc</sortOrder><dateOutstanding>{{as_of_date}}</dateOutstanding></OutstandingCreditorItemsByDateOutstanding>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Open creditor items as of a date.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=OutstandingCreditorItemsByDateOutstanding (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.OutstandingCreditorWithPaymentReference",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/OutstandingCreditorWithPaymentReference\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <OutstandingCreditorWithPaymentReference xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><includeBankTransactions>false</includeBankTransactions><sortOrder>ContactAsc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate></OutstandingCreditorWithPaymentReference>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Openstaande debiteuren- of crediteurenposten met factuurdatum tussen twee data; optioneel met betaalreferentie. Methodes: Accounting.Outstanding{Debtor|Creditor}ItemsByDate of ...WithPaymentReference.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=OutstandingCreditorWithPaymentReference (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.OutstandingDebtorItems",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/OutstandingDebtorItems\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <OutstandingDebtorItems xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><includeBankTransactions>false</includeBankTransactions><sortOrder>DateAsc</sortOrder></OutstandingDebtorItems>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Open debtor items.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=OutstandingDebtorItems (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.OutstandingDebtorItemsByDate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/OutstandingDebtorItemsByDate\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <OutstandingDebtorItemsByDate xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><includeBankTransactions>false</includeBankTransactions><sortOrder>ContactAsc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate></OutstandingDebtorItemsByDate>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Openstaande debiteuren- of crediteurenposten met factuurdatum tussen twee data; optioneel met betaalreferentie. Methodes: Accounting.Outstanding{Debtor|Creditor}ItemsByDate of ...WithPaymentReference.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=OutstandingDebtorItemsByDate (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.OutstandingDebtorItemsByDateOutstanding",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/OutstandingDebtorItemsByDateOutstanding\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <OutstandingDebtorItemsByDateOutstanding xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><includeBankTransactions>false</includeBankTransactions><sortOrder>DateAsc</sortOrder><dateOutstanding>{{as_of_date}}</dateOutstanding></OutstandingDebtorItemsByDateOutstanding>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Open debtor items as of a date.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=OutstandingDebtorItemsByDateOutstanding (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Accounting.OutstandingDebtorWithPaymentReference",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/OutstandingDebtorWithPaymentReference\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <OutstandingDebtorWithPaymentReference xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><includeBankTransactions>false</includeBankTransactions><sortOrder>ContactAsc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate></OutstandingDebtorWithPaymentReference>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "Openstaande debiteuren- of crediteurenposten met factuurdatum tussen twee data; optioneel met betaalreferentie. Methodes: Accounting.Outstanding{Debtor|Creditor}ItemsByDate of ...WithPaymentReference.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=OutstandingDebtorWithPaymentReference (verify current documentation)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 AccountingInfo",
+      "description": "Read calls on AccountingInfo.asmx.",
+      "item": [
+        {
+          "name": "AccountingInfo.Administrations",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Administrations\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Administrations xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></Administrations>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Administrations (AccountingInfo variant).\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=Administrations (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetContactDefaultValues",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetContactDefaultValues\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetContactDefaultValues xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><contactID>[Voorbeeld]</contactID></GetContactDefaultValues>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Standaardwaarden van een contact in een administratie.\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetContactDefaultValues (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetCustomPaymentMethods",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetCustomPaymentMethods\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetCustomPaymentMethods xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID></GetCustomPaymentMethods>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Alle aangepaste betaalmethodes.\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetCustomPaymentMethods (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetFinancialYearModifiedDate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetFinancialYearModifiedDate\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetFinancialYearModifiedDate xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><yearID>1</yearID></GetFinancialYearModifiedDate>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "When a financial year was last modified.\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetFinancialYearModifiedDate (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetGLAccountScheme",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetGLAccountScheme\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetGLAccountScheme xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID></GetGLAccountScheme>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "General ledger account scheme.\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetGLAccountScheme (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetPeriodDateTable",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetPeriodDateTable\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetPeriodDateTable xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><yearID>1</yearID></GetPeriodDateTable>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Startdatum van een boekjaar per administratie.\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetPeriodDateTable (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetProjectBalance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetProjectBalance\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetProjectBalance xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><GLAccountCode>[Voorbeeld]</GLAccountCode><projectCode>[Voorbeeld]</projectCode><StartDate>{{start_date}}</StartDate><EndDate>{{end_date}}</EndDate></GetProjectBalance>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Saldo van een project per grootboekrekening.\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetProjectBalance (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetProjects",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetProjects\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetProjects xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><searchOption>All</searchOption><searchValue>[Voorbeeld]</searchValue></GetProjects>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Projecten (GetProjects of GetProjectsAndID).\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetProjects (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetProjectsAndID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetProjectsAndID\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetProjectsAndID xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><searchOption>All</searchOption><searchValue>[Voorbeeld]</searchValue></GetProjectsAndID>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Projecten (GetProjects of GetProjectsAndID).\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetProjectsAndID (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetRGSScheme",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetRGSScheme\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetRGSScheme xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><rgsVersion>[Voorbeeld]</rgsVersion></GetRGSScheme>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Rekeningschema met RGS-codes (Nederlandse referentie; in België meestal niet gebruikt).\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetRGSScheme (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetStartBalanceByGlAccount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetStartBalanceByGlAccount\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetStartBalanceByGlAccount xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><bookyear>1</bookyear><financialMode>1</financialMode></GetStartBalanceByGlAccount>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Beginsaldo's per grootboekrekening voor een boekjaar.\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetStartBalanceByGlAccount (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetTransactionDetails",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetTransactionDetails\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetTransactionDetails xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><GLAccountCode>[Voorbeeld]</GLAccountCode><StartDate>{{start_date}}</StartDate><EndDate>{{end_date}}</EndDate><financialMode>0</financialMode></GetTransactionDetails>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Transactions of one account.\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetTransactionDetails (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "AccountingInfo.GetTransactions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetTransactions\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetTransactions xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><glAccountCode>[Voorbeeld]</glAccountCode><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate><financialMode>1</financialMode><dataGroups>[Voorbeeld]</dataGroups><numberOfRecords>100</numberOfRecords><startRecord>0</startRecord></GetTransactions>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/AccountingInfo.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "AccountingInfo.asmx"
+              ]
+            },
+            "description": "Grootboektransacties met paginering; haalt standaard alle pagina's op (max_paginas begrenst).\n\nOfficial reference: https://api.yukiworks.be/ws/AccountingInfo.asmx?op=GetTransactions (verify current documentation)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 Archive",
+      "description": "Read calls on Archive.asmx.",
+      "item": [
+        {
+          "name": "Archive.CostCategories",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/CostCategories\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <CostCategories xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></CostCategories>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Kostencategorieën.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=CostCategories (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.Currencies",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Currencies\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Currencies xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></Currencies>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Valuta's.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=Currencies (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.DocumentFolderCounts",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/DocumentFolderCounts\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <DocumentFolderCounts xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><year>1</year></DocumentFolderCounts>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Aantallen per map voor een jaar.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=DocumentFolderCounts (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.DocumentFolderTabs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/DocumentFolderTabs\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <DocumentFolderTabs xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><folderID>[Voorbeeld]</folderID></DocumentFolderTabs>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Tabs van een archiefmap.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=DocumentFolderTabs (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.DocumentFolders",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/DocumentFolders\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <DocumentFolders xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></DocumentFolders>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Alle archiefmappen.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=DocumentFolders (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.DocumentImageCount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/DocumentImageCount\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <DocumentImageCount xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><documentID>[Voorbeeld]</documentID></DocumentImageCount>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Aantal pagina-afbeeldingen.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=DocumentImageCount (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.DocumentXMLData",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/DocumentXMLData\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <DocumentXMLData xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><documentID>[Voorbeeld]</documentID></DocumentXMLData>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Herkende gegevens (XML) van een document, geen bestand.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=DocumentXMLData (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.Documents",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Documents\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Documents xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><sortOrder>CreatedDesc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate><numberOfRecords>100</numberOfRecords><startRecord>0</startRecord></Documents>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Documentmetadata, gepagineerd (alleen metadata, geen bestandsinhoud).\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=Documents (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.DocumentsByType",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/DocumentsByType\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <DocumentsByType xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><documentType>1</documentType><sortOrder>CreatedDesc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate><numberOfRecords>100</numberOfRecords><startRecord>0</startRecord></DocumentsByType>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Documentmetadata per documenttype.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=DocumentsByType (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.DocumentsInFolder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/DocumentsInFolder\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <DocumentsInFolder xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><folderID>1</folderID><sortOrder>CreatedDesc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate><numberOfRecords>100</numberOfRecords><startRecord>0</startRecord></DocumentsInFolder>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Documentmetadata in een map.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=DocumentsInFolder (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.DocumentsInTab",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/DocumentsInTab\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <DocumentsInTab xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><tabID>1</tabID><sortOrder>CreatedDesc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate><numberOfRecords>100</numberOfRecords><startRecord>0</startRecord></DocumentsInTab>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Documentmetadata in een tab.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=DocumentsInTab (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.FindDocument",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/FindDocument\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <FindDocument xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><documentID>[Voorbeeld]</documentID></FindDocument>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Metadata van één document.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=FindDocument (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.Menu",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Menu\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Menu xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></Menu>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Menustructuur van het archief.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=Menu (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.ModifiedDocumentsByType",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/ModifiedDocumentsByType\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <ModifiedDocumentsByType xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><documentType>1</documentType><sortOrder>CreatedDesc</sortOrder><modifiedSince>{{as_of_date}}</modifiedSince><numberOfRecords>100</numberOfRecords><startRecord>0</startRecord></ModifiedDocumentsByType>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Sinds een datum gewijzigd.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=ModifiedDocumentsByType (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.ModifiedDocumentsInFolder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/ModifiedDocumentsInFolder\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <ModifiedDocumentsInFolder xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><folderID>1</folderID><sortOrder>CreatedDesc</sortOrder><modifiedSince>{{as_of_date}}</modifiedSince><numberOfRecords>100</numberOfRecords><startRecord>0</startRecord></ModifiedDocumentsInFolder>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Sinds een datum gewijzigd.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=ModifiedDocumentsInFolder (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.PaymentMethods",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/PaymentMethods\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <PaymentMethods xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID></PaymentMethods>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Betaalmethodes.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=PaymentMethods (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.Projects",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/Projects\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <Projects xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID></Projects>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Projecten van een administratie.\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=Projects (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Archive.SearchDocuments",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/SearchDocuments\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <SearchDocuments xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><searchOption>All</searchOption><searchText>[Voorbeeld]</searchText><folderID>1</folderID><tabID>1</tabID><sortOrder>CreatedDesc</sortOrder><startDate>{{start_date}}</startDate><endDate>{{end_date}}</endDate><numberOfRecords>100</numberOfRecords><startRecord>0</startRecord></SearchDocuments>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Archive.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Archive.asmx"
+              ]
+            },
+            "description": "Zoeken in documentmetadata.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Archive.asmx?op=SearchDocuments (verify current documentation)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 Backoffice",
+      "description": "Read calls on Backoffice.asmx.",
+      "item": [
+        {
+          "name": "Backoffice.GetWorkflow",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetWorkflow\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetWorkflow xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID></GetWorkflow>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Backoffice.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Backoffice.asmx"
+              ]
+            },
+            "description": "De workflow (te verwerken documenten) van een administratie (lezen). Het antwoordformaat is niet gedocumenteerd.\n\nOfficial reference: https://api.yukiworks.be/ws/Backoffice.asmx?op=GetWorkflow (verify current documentation)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 Contact",
+      "description": "Read calls on Contact.asmx.",
+      "item": [
+        {
+          "name": "Contact.GetSuppliersAndCustomers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetSuppliersAndCustomers\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetSuppliersAndCustomers xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><domainID>{{domain_id}}</domainID><searchOption>All</searchOption><searchValue>[Voorbeeld]</searchValue><sortOrder>Name</sortOrder><modifiedAfter>{{as_of_date}}</modifiedAfter><active>Both</active><pageNumber>1</pageNumber><contactType>Customer</contactType></GetSuppliersAndCustomers>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Contact.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Contact.asmx"
+              ]
+            },
+            "description": "Klanten en/of leveranciers; gepagineerd.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Contact.asmx?op=GetSuppliersAndCustomers (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Contact.SearchContacts",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/SearchContacts\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <SearchContacts xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><domainID>{{domain_id}}</domainID><searchOption>All</searchOption><searchValue>[Voorbeeld]</searchValue><sortOrder>Name</sortOrder><modifiedAfter>{{as_of_date}}</modifiedAfter><active>Both</active><pageNumber>1</pageNumber></SearchContacts>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Contact.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Contact.asmx"
+              ]
+            },
+            "description": "Contacten zoeken; gepagineerd.\n\nNeeds a current domain for accountant keys (see docs/POSTMAN.md).\n\nOfficial reference: https://api.yukiworks.be/ws/Contact.asmx?op=SearchContacts (verify current documentation)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06 Sales",
+      "description": "Read calls on Sales.asmx.",
+      "item": [
+        {
+          "name": "Sales.GetSalesItems",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/GetSalesItems\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <GetSalesItems xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID></GetSalesItems>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Sales.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Sales.asmx"
+              ]
+            },
+            "description": "Verkoopartikelen van een administratie.\n\nOfficial reference: https://api.yukiworks.be/ws/Sales.asmx?op=GetSalesItems (verify current documentation)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07 Vat",
+      "description": "Read calls on Vat.asmx.",
+      "item": [
+        {
+          "name": "Vat.ActiveVATCodesList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/ActiveVATCodesList\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <ActiveVATCodesList xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID></ActiveVATCodesList>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Vat.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Vat.asmx"
+              ]
+            },
+            "description": "Actieve btw-codes van een administratie.\n\nOfficial reference: https://api.yukiworks.be/ws/Vat.asmx?op=ActiveVATCodesList (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "Vat.VATReturnList",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/VATReturnList\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <VATReturnList xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><year>1</year><modifiedAfter>{{as_of_date}}</modifiedAfter></VATReturnList>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Vat.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Vat.asmx"
+              ]
+            },
+            "description": "Lijst van btw-aangiften voor een jaar (lezen, geen indiening).\n\nOfficial reference: https://api.yukiworks.be/ws/Vat.asmx?op=VATReturnList (verify current documentation)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "99 DISABLED - requires explicit approval",
+      "description": "Not used by default. The plugin itself keeps writing off unless YUKI_WRITE_ENABLED is set. Do not run these without explicit approval.",
+      "item": [
+        {
+          "name": "DISABLED - Accounting.SetCurrentDomain",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/SetCurrentDomain\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <SetCurrentDomain xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><domainID>{{domain_id}}</domainID></SetCurrentDomain>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "DISABLED, requires explicit approval. Changes only the session context (current domain); needed by Archive and Contact calls with an accountant key.\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=SetCurrentDomain (verify current documentation)."
+          },
+          "response": []
+        },
+        {
+          "name": "DISABLED - Accounting.ProcessJournal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.theyukicompany.com/ProcessJournal\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <soap:Body>\n    <ProcessJournal xmlns=\"http://www.theyukicompany.com/\"><sessionID>{{session_id}}</sessionID><administrationID>{{administration_id}}</administrationID><xmlDoc><!-- [Voorbeeld] journal XML: see docs/BOEKINGSWORKFLOW.md --></xmlDoc></ProcessJournal>\n  </soap:Body>\n</soap:Envelope>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/Accounting.asmx",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Accounting.asmx"
+              ]
+            },
+            "description": "DISABLED, requires explicit approval. WRITE call: books a journal entry. Do not run it unless you intend to book. Never for workflow documents (finish those with Afhandelen in Yuki).\n\nOfficial reference: https://api.yukiworks.be/ws/Accounting.asmx?op=ProcessJournal (verify current documentation)."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
