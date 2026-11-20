@@ -1,0 +1,18 @@
+# Example hooks file. Hooks are OFF unless enabled = true AND this file is passed with --hooks or YUKI_HOOKS_FILE.
+enabled = true
+timeout_seconds = 10
+
+[[hooks]]
+name = "copy export"
+event = "on_export"
+command = ["python3", "copy_export.py"]
+
+[[hooks]]
+name = "webhook notice (placeholder URL)"
+event = "on_export"
+command = ["python3", "webhook_notify.py"]
+
+[[hooks]]
+name = "audit log"
+event = "post_call"
+command = ["python3", "audit_log.py"]
