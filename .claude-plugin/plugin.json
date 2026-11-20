@@ -1,0 +1,67 @@
+{
+  "name": "fiscai-yuki-api-connector",
+  "version": "1.0.0",
+  "description": "Plugin for Grok Bot (also works with Copilot, Claude, Cursor, Windsurf and other MCP clients): read-only access to the Yuki accounting API for Belgian accountants and business owners. Powered by FISCALCI Accounting & Tax (Askin Alci)",
+  "author": {
+    "name": "Askin Alci"
+  },
+  "homepage": "https://github.com/MnrAlci/fiscai-yuki-api-connector#readme",
+  "repository": "https://github.com/MnrAlci/fiscai-yuki-api-connector",
+  "license": "Apache-2.0",
+  "keywords": [
+    "yuki",
+    "visma",
+    "boekhouding",
+    "accounting",
+    "belgie",
+    "mcp",
+    "debiteuren",
+    "crediteuren",
+    "dashboard"
+  ],
+  "skills": [
+    "./skills/"
+  ],
+  "agents": [
+    "./agents/claude/claude-code/yuki-accountant.md",
+    "./agents/claude/claude-code/yuki-business-owner.md"
+  ],
+  "mcpServers": {
+    "fiscai-yuki-api-connector": {
+      "command": "python3",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/server/run_server.py"
+      ],
+      "env": {
+        "YUKI_ACCESS_KEY": "${user_config.yuki_access_key}",
+        "YUKI_ACCESS_LEVEL": "${user_config.yuki_access_level}",
+        "YUKI_DAILY_LIMIT": "${user_config.yuki_daily_limit}"
+      }
+    }
+  },
+  "userConfig": {
+    "yuki_access_key": {
+      "type": "string",
+      "title": "Yuki access key",
+      "description": "Your Yuki WebserviceAccessKey (portal or domain key). Stored in secure storage, never in files.",
+      "sensitive": true,
+      "required": true
+    },
+    "yuki_access_level": {
+      "type": "string",
+      "title": "Access level",
+      "description": "portaal (accountant portal key, all administrations) or domein (key per domain).",
+      "options": [
+        "portaal",
+        "domein"
+      ],
+      "default": "portaal"
+    },
+    "yuki_daily_limit": {
+      "type": "string",
+      "title": "Daily call limit",
+      "description": "Maximum Yuki calls per domain per day (default 900; Yuki: 1000 per domain per day are free).",
+      "default": "900"
+    }
+  }
+}

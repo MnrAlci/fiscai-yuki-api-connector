@@ -1,0 +1,138 @@
+{
+  "name": "fiscai-yuki-api-connector",
+  "displayName": "FISCAi Yuki API Connector",
+  "version": "1.0.0",
+  "description": "Plugin for Grok Bot (also works with Copilot, Claude, Cursor, Windsurf and other MCP clients): read-only access to the Yuki accounting API for Belgian accountants and business owners. Powered by FISCALCI Accounting & Tax (Askin Alci)",
+  "author": {
+    "name": "Askin Alci"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/MnrAlci/fiscai-yuki-api-connector#readme",
+  "repository": "https://github.com/MnrAlci/fiscai-yuki-api-connector",
+  "keywords": [
+    "yuki",
+    "visma",
+    "boekhouding",
+    "accounting",
+    "belgie",
+    "mcp",
+    "debiteuren",
+    "crediteuren",
+    "dashboard"
+  ],
+  "logo": "assets/logo.png",
+  "skills": "./skills/",
+  "rules": [
+    "./agents/cursor/yuki-core.mdc",
+    "./agents/cursor/yuki-accountant.mdc",
+    "./agents/cursor/yuki-business-owner.mdc"
+  ],
+  "agents": [
+    "./agents/claude/claude-code/yuki-accountant.md",
+    "./agents/claude/claude-code/yuki-business-owner.md"
+  ],
+  "mcpServers": {
+    "fiscai-yuki-api-connector": {
+      "type": "stdio",
+      "command": "python3",
+      "args": [
+        "${CURSOR_PLUGIN_ROOT}/server/run_server.py"
+      ],
+      "cwd": "${CURSOR_PLUGIN_ROOT}",
+      "env": {
+        "YUKI_ACCESS_KEY": "${YUKI_ACCESS_KEY}",
+        "YUKI_CACHE_KEY": "${YUKI_CACHE_KEY}",
+        "YUKI_ACCESS_LEVEL": "${YUKI_ACCESS_LEVEL}",
+        "YUKI_DAILY_LIMIT": "${YUKI_DAILY_LIMIT}",
+        "YUKI_DAILY_LIMIT_APPROVAL": "${YUKI_DAILY_LIMIT_APPROVAL}",
+        "YUKI_DOMAIN": "${YUKI_DOMAIN}",
+        "YUKI_WRITE_ENABLED": "${YUKI_WRITE_ENABLED}",
+        "YUKI_WRITE_TOKEN_TTL_MIN": "${YUKI_WRITE_TOKEN_TTL_MIN}",
+        "YUKI_WRITE_MAX_PER_DAY": "${YUKI_WRITE_MAX_PER_DAY}",
+        "YUKI_CREDITOR_SIGN": "${YUKI_CREDITOR_SIGN}",
+        "YUKI_BRAND_NAME": "${YUKI_BRAND_NAME}",
+        "YUKI_BRAND_COLOR": "${YUKI_BRAND_COLOR}",
+        "YUKI_BRAND_LOGO_PATH": "${YUKI_BRAND_LOGO_PATH}",
+        "YUKI_MAIL_SIGNATURE": "${YUKI_MAIL_SIGNATURE}"
+      }
+    }
+  },
+  "variables": {
+    "type": "object",
+    "properties": {
+      "YUKI_ACCESS_KEY": {
+        "type": "string",
+        "title": "Yuki-toegangssleutel",
+        "description": "WebserviceAccessKey van Yuki (portaal- of domeinsleutel). Alias: YUKI_API_KEY. Geheim."
+      },
+      "YUKI_CACHE_KEY": {
+        "type": "string",
+        "title": "Cachesleutel",
+        "description": "Optioneel: sterk geheim voor de lokale sessiecache. Zonder waarde wordt eenmalig een sleutel aangemaakt in de datamap (0600). Geheim."
+      },
+      "YUKI_ACCESS_LEVEL": {
+        "type": "string",
+        "title": "Toegangsniveau",
+        "description": "portaal (accountantsportaal-sleutel, alle administraties) of domein (sleutel per domein). Standaard portaal."
+      },
+      "YUKI_DAILY_LIMIT": {
+        "type": "string",
+        "title": "Daglimiet",
+        "description": "Maximum Yuki-calls per domein per dag (standaard 900). Yuki: 1000 calls per domein per dag zijn gratis. Boven 1000 alleen met YUKI_DAILY_LIMIT_APPROVAL."
+      },
+      "YUKI_DAILY_LIMIT_APPROVAL": {
+        "type": "string",
+        "title": "Akkoord boven 1000",
+        "description": "Referentie van uw uitdrukkelijk akkoord om boven 1000 te gaan; er kunnen dan kosten volgen."
+      },
+      "YUKI_DOMAIN": {
+        "type": "string",
+        "title": "Domeinlabel",
+        "description": "Naam waarop calls zonder eigen domein geteld worden."
+      },
+      "YUKI_WRITE_ENABLED": {
+        "type": "string",
+        "title": "Boeken toestaan",
+        "description": "Standaard uit. Alleen de waarde ja zet de optionele boekingsworkflow aan (journaalposten, telkens na uitdrukkelijke bevestiging per boeking)."
+      },
+      "YUKI_WRITE_TOKEN_TTL_MIN": {
+        "type": "string",
+        "title": "Geldigheid bevestigingstoken",
+        "description": "Minuten (1 tot 60), standaard 15."
+      },
+      "YUKI_WRITE_MAX_PER_DAY": {
+        "type": "string",
+        "title": "Maximum boekingen per dag",
+        "description": "1 tot 100, standaard 25."
+      },
+      "YUKI_CREDITOR_SIGN": {
+        "type": "string",
+        "title": "Teken crediteurenposten",
+        "description": "positief (standaard) of negatief: teken van te betalen crediteurenposten in uw dossier."
+      },
+      "YUKI_BRAND_NAME": {
+        "type": "string",
+        "title": "Merknaam",
+        "description": "Naam bovenaan dashboard en handleiding."
+      },
+      "YUKI_BRAND_COLOR": {
+        "type": "string",
+        "title": "Merkkleur",
+        "description": "Hexkleur, bv. #1F4E79."
+      },
+      "YUKI_BRAND_LOGO_PATH": {
+        "type": "string",
+        "title": "Pad naar logo",
+        "description": "Lokaal PNG/JPG-bestand."
+      },
+      "YUKI_MAIL_SIGNATURE": {
+        "type": "string",
+        "title": "Handtekening conceptmail",
+        "description": "Tekst onder 'Met vriendelijke groeten,'."
+      }
+    },
+    "required": [
+      "YUKI_ACCESS_KEY"
+    ]
+  }
+}
