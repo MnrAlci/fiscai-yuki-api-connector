@@ -1,0 +1,15 @@
+---
+title: "Key figures [Voorbeeld] BV"
+format:
+  html: default
+  docx: default
+  pdf: default
+---
+
+```{python}
+#| echo: false
+import pandas as pd
+pd.read_csv("../data/yuki-kpis.csv")[["kpi", "waarde", "eenheid"]]
+```
+
+*EXAMPLE with made-up [Voorbeeld] data. Not tax advice.*
