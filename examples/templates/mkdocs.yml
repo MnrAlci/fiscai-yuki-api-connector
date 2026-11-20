@@ -1,0 +1,5 @@
+site_name: Key figures (example)
+theme:
+  name: material
+nav:
+  - Home: index.md
