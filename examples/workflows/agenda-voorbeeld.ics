@@ -1,0 +1,24 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Voorbeeld//Agenda//NL
+BEGIN:VEVENT
+UID:voorbeeld-1@example
+DTSTART;TZID=Europe/Brussels:20261123T100000
+DTEND;TZID=Europe/Brussels:20261123T110000
+SUMMARY:[Voorbeeld] BV: bespreking jaarcijfers
+ATTENDEE;CN=Voorbeeld:mailto:contact@voorbeeld.example
+END:VEVENT
+BEGIN:VEVENT
+UID:voorbeeld-2@example
+DTSTART;TZID=Europe/Brussels:20261124T140000
+DTEND;TZID=Europe/Brussels:20261124T150000
+SUMMARY:Intern teamoverleg [Voorbeeld]
+END:VEVENT
+BEGIN:VEVENT
+UID:voorbeeld-3@example
+DTSTART;TZID=Europe/Brussels:20261201T090000
+DTEND;TZID=Europe/Brussels:20261201T100000
+SUMMARY:[Voorbeeld] BV: maandelijkse opvolging
+RRULE:FREQ=MONTHLY;COUNT=3
+END:VEVENT
+END:VCALENDAR

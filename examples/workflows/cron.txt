@@ -1,0 +1,7 @@
+# Voorbeeld (Linux/macOS): elke werkdag om 07:30 voorbereidingen maken. [Voorbeeld]-paden; geen geheimen in dit bestand.
+# De sleutel staat NIET hier: laad hem uit een omgevingsbestand met rechten 600 (zie docs/AUTOMATION.md).
+# crontab -e
+30 7 * * 1-5  . "$HOME/.config/yuki/env" && /usr/local/bin/yuki-api-connector workflows run -w "$HOME/yuki/workflows.toml" --quiet >> "$HOME/yuki/workflows.log" 2>&1
+# Alleen plannen (geen Yuki-calls), handig om te testen:
+# 25 7 * * 1-5  . "$HOME/.config/yuki/env" && /usr/local/bin/yuki-api-connector workflows plan -w "$HOME/yuki/workflows.toml"
+# Powered by FISCALCI Accounting & Tax (Askin Alci)

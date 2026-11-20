@@ -1,0 +1,26 @@
+# VOORBEELD, geen actieve workflow: dit bestand staat in examples/ en draait nergens. Kopieer het naar .github/workflows/ in een PRIVÉ-repository
+# of, liever, gebruik een zelfgehoste runner: de uitvoer bevat klantgegevens. Geen geheimen in de repository: gebruik versleutelde secrets
+# (Settings > Secrets and variables > Actions). Verify current docs: https://docs.github.com/actions
+# Powered by FISCALCI Accounting & Tax (Askin Alci)
+name: yuki-workflows-voorbeeld
+on:
+  schedule:
+    - cron: "30 6 * * 1-5"   # UTC; scheduled workflows kunnen vertraagd of overgeslagen worden
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  workflows:
+    runs-on: ubuntu-latest      # klantgegevens: overweeg een zelfgehoste runner
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install .
+      - name: Voorbereidingen maken (alleen lezen; concepten als .eml)
+        env:
+          YUKI_ACCESS_KEY: ${{ secrets.YUKI_ACCESS_KEY }}
+          YUKI_WF_ICS_URL: ${{ secrets.YUKI_WF_ICS_URL }}
+        run: yuki-api-connector workflows run -w workflows.toml --out "$RUNNER_TEMP/workflow-output" --quiet
+      # Bewust GEEN upload-artifact: de uitvoer bevat klantgegevens. Schrijf naar een beschermde locatie van uzelf als u de bestanden wilt bewaren.
