@@ -1,0 +1,134 @@
+{
+  "dataset": "kpis",
+  "schema": [
+    {
+      "naam": "administratie",
+      "type": "text",
+      "omschrijving": "Naam van de administratie"
+    },
+    {
+      "naam": "periode_van",
+      "type": "date",
+      "omschrijving": "Begin van de periode (JJJJ-MM-DD)"
+    },
+    {
+      "naam": "periode_tot",
+      "type": "date",
+      "omschrijving": "Einde van de periode"
+    },
+    {
+      "naam": "peildatum",
+      "type": "date",
+      "omschrijving": "Peildatum van de open posten"
+    },
+    {
+      "naam": "kpi",
+      "type": "text",
+      "omschrijving": "Naam van de kerncijfer, bv. omzet, kosten, resultaat, liquide_middelen, open_debiteuren_totaal"
+    },
+    {
+      "naam": "waarde",
+      "type": "number",
+      "omschrijving": "Waarde van het kerncijfer"
+    },
+    {
+      "naam": "eenheid",
+      "type": "text",
+      "omschrijving": "EUR, dagen, procent of aantal"
+    }
+  ],
+  "administratie": "[Voorbeeld] BV",
+  "voorbeeld": true,
+  "rijen": [
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "omzet",
+      "waarde": 182400.0,
+      "eenheid": "EUR"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "kosten",
+      "waarde": 141250.0,
+      "eenheid": "EUR"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "resultaat",
+      "waarde": 41150.0,
+      "eenheid": "EUR"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "liquide_middelen",
+      "waarde": 58300.0,
+      "eenheid": "EUR"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "open_debiteuren_totaal",
+      "waarde": 36200.0,
+      "eenheid": "EUR"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "open_debiteuren_vervallen",
+      "waarde": 9800.0,
+      "eenheid": "EUR"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "open_crediteuren_totaal",
+      "waarde": 21700.0,
+      "eenheid": "EUR"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "open_crediteuren_vervallen",
+      "waarde": 3100.0,
+      "eenheid": "EUR"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "brutomarge",
+      "waarde": 38.4,
+      "eenheid": "procent"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "periode_van": "2026-01-01",
+      "periode_tot": "2026-11-30",
+      "peildatum": "2026-11-30",
+      "kpi": "nettomarge",
+      "waarde": 22.6,
+      "eenheid": "procent"
+    }
+  ]
+}

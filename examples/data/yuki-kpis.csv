@@ -1,0 +1,11 @@
+administratie,periode_van,periode_tot,peildatum,kpi,waarde,eenheid
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,omzet,182400.0,EUR
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,kosten,141250.0,EUR
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,resultaat,41150.0,EUR
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,liquide_middelen,58300.0,EUR
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,open_debiteuren_totaal,36200.0,EUR
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,open_debiteuren_vervallen,9800.0,EUR
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,open_crediteuren_totaal,21700.0,EUR
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,open_crediteuren_vervallen,3100.0,EUR
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,brutomarge,38.4,procent
+[Voorbeeld] BV,2026-01-01,2026-11-30,2026-11-30,nettomarge,22.6,procent

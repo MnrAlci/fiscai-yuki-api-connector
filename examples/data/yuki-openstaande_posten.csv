@@ -1,0 +1,5 @@
+administratie,soort,peildatum,relatie,referentie,omschrijving,factuurdatum,vervaldatum,origineel_bedrag,open_bedrag,ouderdom_bucket
+[Voorbeeld] BV,debiteuren,2026-11-30,[Klant A],VF-0001,Factuur,2026-09-30,2026-10-30,12000.0,12000.0,31-60
+[Voorbeeld] BV,debiteuren,2026-11-30,[Klant B],VF-0002,Factuur,2026-10-20,2026-11-19,9800.0,9800.0,0-30
+[Voorbeeld] BV,debiteuren,2026-11-30,[Klant C],VF-0003,Factuur,2026-11-10,2026-12-10,14400.0,14400.0,niet_vervallen
+[Voorbeeld] BV,debiteuren,2026-11-30,[Klant D],VF-0004,Creditnota,2026-11-02,2026-11-02,-500.0,-500.0,negatief
