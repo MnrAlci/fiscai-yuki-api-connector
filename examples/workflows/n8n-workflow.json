@@ -1,0 +1,53 @@
+{
+  "name": "Yuki workflows (voorbeeld)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 7 * * 1-5"
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "yuki-api-connector workflows run -w /home/voorbeeld/yuki/workflows.toml --json"
+      },
+      "name": "Execute Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "meta": {
+    "note": "Voorbeeld [Voorbeeld]. Geen geheimen: YUKI_ACCESS_KEY staat in de omgeving van n8n, niet in deze workflow. Verify current docs. Powered by FISCALCI Accounting & Tax (Askin Alci)"
+  }
+}

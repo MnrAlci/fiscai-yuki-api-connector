@@ -1,0 +1,137 @@
+# Voorbeeldconfiguratie voor 'yuki-api-connector workflows'. [Voorbeeld]-gegevens; GEEN geheimen in dit bestand.
+# De regels hieronder (vervaldag, maand, voorsprong) zijn een VOORBEELD en geen feit: verifieer actuele regel bij de officiële bron ('source').
+# Powered by FISCALCI Accounting & Tax (Askin Alci)
+# Bedoeld voor Belgische boekhouders/accountants; gebaseerd op Belgische boekhoud- en btw-regels (MAR, Belgisch btw-stelsel). Gebruik buiten België: verifieer zelf de lokale regels.
+[settings]
+timezone = "Europe/Brussels"
+days_ahead = 2          # vergaderingen binnen N dagen worden voorbereid
+language = "nl"         # nl | en
+out_dir = "workflow-output"
+max_items = 10          # bescherming van het Yuki-daglimiet per run
+overdue_days = 14       # verlopen verplichtingen blijven zo lang in de lijst
+
+[calendar]
+adapter = "ics"         # ics | graph | google (graph/google: token uit een omgevingsvariabele; verify current docs)
+path = "agenda-voorbeeld.ics"      # relatief aan dit bestand; zet hier uw eigen .ics-export
+# url_env = "YUKI_WF_ICS_URL"      # NAAM van een omgevingsvariabele; een privé-ICS-URL zelf nooit in dit bestand
+
+[mail]
+adapter = "eml"         # eml | outlook | gmail | agentmail | smtp  (verstuurt NOOIT zonder allow_send + --send + bevestiging per run)
+create_drafts = true
+allow_send = false      # verzenden naar klanten is uw eigen verantwoordelijkheid
+signature = "[Voorbeeld] Uw boekhouder"
+
+[template]              # uw eigen overzicht: kies secties en kerncijfers
+sections = ["kpis", "open_items", "missing_documents", "dossier_status"]
+kpis = ["omzet", "kosten", "resultaat", "liquide_middelen", "open_debiteuren.vervallen", "open_crediteuren.vervallen", "btw_indicatie"]
+compare = true
+# export_formats = ["csv", "xlsx"]  # optioneel: schrijft ook een export naar <out_dir>/exports/<klant>
+
+[[clients]]
+name = "[Voorbeeld] BV"
+administratie = "[Voorbeeld] BV"
+match_keywords = ["[Voorbeeld] BV"]
+match_domains = ["voorbeeld.example"]
+email_to = ["contact@voorbeeld.example"]
+status_file = "status-voorbeeld.json"
+documents = ["Bankuittreksels van de lopende maand"]
+obligations = ["btw-kwartaal", "klantenlisting", "intracommunautaire-listing", "ubo-register", "jaarrekening", "vennootschapsbelasting", "personenbelasting"]
+
+[[obligations]]
+id = "btw-maand"
+title = "Periodieke btw-aangifte (maandelijks)"
+frequency = "monthly"
+due_day = 20
+due_month_offset = 1
+lead_days = 10
+verify = "verifieer actuele regel"
+source = "https://financien.belgium.be/nl"
+checklist = ["Verkoop- en aankoopfacturen van de maand geboekt", "Btw-saldo in Yuki nagekeken", "Aangifte ingediend en betaling gepland"]
+documents = ["Ontbrekende aankoopfacturen van de maand"]
+
+[[obligations]]
+id = "btw-kwartaal"
+title = "Periodieke btw-aangifte (kwartaal)"
+frequency = "quarterly"
+due_day = 20
+due_month_offset = 1
+lead_days = 14
+verify = "verifieer actuele regel"
+source = "https://financien.belgium.be/nl"
+checklist = ["Verkoop- en aankoopfacturen van het kwartaal geboekt", "Btw-saldo in Yuki nagekeken", "Aangifte ingediend en betaling gepland"]
+documents = ["Ontbrekende aankoopfacturen van het kwartaal"]
+
+[[obligations]]
+id = "klantenlisting"
+title = "Jaarlijkse klantenlisting"
+frequency = "annual"
+due_month = 3
+due_day = 31
+year_offset = -1
+lead_days = 30
+verify = "verifieer actuele regel"
+source = "https://financien.belgium.be/nl"
+checklist = ["Btw-nummers van alle klanten gecontroleerd", "Listing opgemaakt en ingediend"]
+documents = ["Btw-nummers van nieuwe klanten"]
+
+[[obligations]]
+id = "intracommunautaire-listing"
+title = "Intracommunautaire listing"
+frequency = "monthly"
+due_day = 20
+due_month_offset = 1
+lead_days = 10
+verify = "verifieer actuele regel"
+source = "https://financien.belgium.be/nl"
+checklist = ["Intracommunautaire leveringen en diensten aangeduid", "Listing ingediend"]
+documents = ["Facturen aan klanten in andere EU-lidstaten"]
+
+[[obligations]]
+id = "ubo-register"
+title = "UBO-register: controle en bijwerking"
+frequency = "annual"
+due_month = 6
+due_day = 30
+year_offset = 0
+lead_days = 30
+verify = "verifieer actuele regel (de verplichting hangt aan wijzigingen en jaarlijkse bevestiging; controleer de voorwaarden)"
+source = "https://financien.belgium.be/nl"
+checklist = ["Uiteindelijk begunstigden gecontroleerd", "Wijzigingen doorgegeven of bevestiging gedaan"]
+documents = ["Actueel aandeelhoudersregister"]
+
+[[obligations]]
+id = "jaarrekening"
+title = "Jaarrekening: afsluiten en neerleggen"
+frequency = "annual"
+due_month = 7
+due_day = 31
+year_offset = -1
+lead_days = 45
+verify = "verifieer actuele regel"
+source = "https://www.nbb.be/nl/balanscentrale"
+checklist = ["Boekjaar afgesloten in Yuki", "Jaarrekening opgemaakt en goedgekeurd", "Neerlegging voorbereid"]
+documents = ["Getekende notulen van de algemene vergadering"]
+
+[[obligations]]
+id = "vennootschapsbelasting"
+title = "Aangifte vennootschapsbelasting"
+frequency = "fixed"
+dates = ["2027-10-15"]          # [Voorbeeld]: de datum wijzigt jaarlijks; vul de actuele datum zelf in
+year_offset = -2
+lead_days = 45
+verify = "verifieer actuele regel"
+source = "https://financien.belgium.be/nl"
+checklist = ["Fiscale aanpassingen bepaald", "Aangifte opgemaakt"]
+documents = ["Staat van afschrijvingen en provisies"]
+
+[[obligations]]
+id = "personenbelasting"
+title = "Aangifte personenbelasting"
+frequency = "fixed"
+dates = ["2027-07-15"]          # [Voorbeeld]: de datum wijzigt jaarlijks; vul de actuele datum zelf in
+year_offset = -1
+lead_days = 45
+verify = "verifieer actuele regel"
+source = "https://financien.belgium.be/nl"
+checklist = ["Fiscale fiches en bewijsstukken verzameld", "Aangifte opgemaakt"]
+documents = ["Loonfiches", "Bewijsstukken van aftrekbare uitgaven"]
