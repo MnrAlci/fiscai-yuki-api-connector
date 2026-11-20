@@ -1,0 +1,7 @@
+administratie,peildatum,rekening_code,rekening_naam,saldo
+[Voorbeeld] BV,2026-11-30,550000,Bank,58300.0
+[Voorbeeld] BV,2026-11-30,400000,Handelsdebiteuren,36200.0
+[Voorbeeld] BV,2026-11-30,440000,Handelscrediteuren,-21700.0
+[Voorbeeld] BV,2026-11-30,700000,Omzet,-182400.0
+[Voorbeeld] BV,2026-11-30,600000,Handelsgoederen,74100.0
+[Voorbeeld] BV,2026-11-30,610000,Diensten en diverse goederen,67150.0

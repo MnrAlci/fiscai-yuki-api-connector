@@ -1,0 +1,116 @@
+{
+  "dataset": "openstaande_posten",
+  "schema": [
+    {
+      "naam": "administratie",
+      "type": "text",
+      "omschrijving": "Naam van de administratie"
+    },
+    {
+      "naam": "soort",
+      "type": "text",
+      "omschrijving": "debiteuren of crediteuren"
+    },
+    {
+      "naam": "peildatum",
+      "type": "date",
+      "omschrijving": "Peildatum"
+    },
+    {
+      "naam": "relatie",
+      "type": "text",
+      "omschrijving": "Naam van de relatie"
+    },
+    {
+      "naam": "referentie",
+      "type": "text",
+      "omschrijving": "Referentie of factuurnummer"
+    },
+    {
+      "naam": "omschrijving",
+      "type": "text",
+      "omschrijving": "Omschrijving"
+    },
+    {
+      "naam": "factuurdatum",
+      "type": "date",
+      "omschrijving": "Factuurdatum"
+    },
+    {
+      "naam": "vervaldatum",
+      "type": "date",
+      "omschrijving": "Vervaldatum"
+    },
+    {
+      "naam": "origineel_bedrag",
+      "type": "number",
+      "omschrijving": "Oorspronkelijk bedrag"
+    },
+    {
+      "naam": "open_bedrag",
+      "type": "number",
+      "omschrijving": "Open bedrag (negatief = na te gaan)"
+    },
+    {
+      "naam": "ouderdom_bucket",
+      "type": "text",
+      "omschrijving": "niet_vervallen, 0-30, 31-60, 61-90, >90, zonder_datum of negatief"
+    }
+  ],
+  "administratie": "[Voorbeeld] BV",
+  "voorbeeld": true,
+  "rijen": [
+    {
+      "administratie": "[Voorbeeld] BV",
+      "soort": "debiteuren",
+      "peildatum": "2026-11-30",
+      "relatie": "[Klant A]",
+      "referentie": "VF-0001",
+      "omschrijving": "Factuur",
+      "factuurdatum": "2026-09-30",
+      "vervaldatum": "2026-10-30",
+      "origineel_bedrag": 12000.0,
+      "open_bedrag": 12000.0,
+      "ouderdom_bucket": "31-60"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "soort": "debiteuren",
+      "peildatum": "2026-11-30",
+      "relatie": "[Klant B]",
+      "referentie": "VF-0002",
+      "omschrijving": "Factuur",
+      "factuurdatum": "2026-10-20",
+      "vervaldatum": "2026-11-19",
+      "origineel_bedrag": 9800.0,
+      "open_bedrag": 9800.0,
+      "ouderdom_bucket": "0-30"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "soort": "debiteuren",
+      "peildatum": "2026-11-30",
+      "relatie": "[Klant C]",
+      "referentie": "VF-0003",
+      "omschrijving": "Factuur",
+      "factuurdatum": "2026-11-10",
+      "vervaldatum": "2026-12-10",
+      "origineel_bedrag": 14400.0,
+      "open_bedrag": 14400.0,
+      "ouderdom_bucket": "niet_vervallen"
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "soort": "debiteuren",
+      "peildatum": "2026-11-30",
+      "relatie": "[Klant D]",
+      "referentie": "VF-0004",
+      "omschrijving": "Creditnota",
+      "factuurdatum": "2026-11-02",
+      "vervaldatum": "2026-11-02",
+      "origineel_bedrag": -500.0,
+      "open_bedrag": -500.0,
+      "ouderdom_bucket": "negatief"
+    }
+  ]
+}

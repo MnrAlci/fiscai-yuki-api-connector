@@ -1,0 +1,76 @@
+{
+  "dataset": "saldi",
+  "schema": [
+    {
+      "naam": "administratie",
+      "type": "text",
+      "omschrijving": "Naam van de administratie"
+    },
+    {
+      "naam": "peildatum",
+      "type": "date",
+      "omschrijving": "Datum van de saldibalans"
+    },
+    {
+      "naam": "rekening_code",
+      "type": "text",
+      "omschrijving": "Grootboekrekening"
+    },
+    {
+      "naam": "rekening_naam",
+      "type": "text",
+      "omschrijving": "Naam van de rekening"
+    },
+    {
+      "naam": "saldo",
+      "type": "number",
+      "omschrijving": "Saldo = debet - credit"
+    }
+  ],
+  "administratie": "[Voorbeeld] BV",
+  "voorbeeld": true,
+  "rijen": [
+    {
+      "administratie": "[Voorbeeld] BV",
+      "peildatum": "2026-11-30",
+      "rekening_code": "550000",
+      "rekening_naam": "Bank",
+      "saldo": 58300.0
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "peildatum": "2026-11-30",
+      "rekening_code": "400000",
+      "rekening_naam": "Handelsdebiteuren",
+      "saldo": 36200.0
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "peildatum": "2026-11-30",
+      "rekening_code": "440000",
+      "rekening_naam": "Handelscrediteuren",
+      "saldo": -21700.0
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "peildatum": "2026-11-30",
+      "rekening_code": "700000",
+      "rekening_naam": "Omzet",
+      "saldo": -182400.0
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "peildatum": "2026-11-30",
+      "rekening_code": "600000",
+      "rekening_naam": "Handelsgoederen",
+      "saldo": 74100.0
+    },
+    {
+      "administratie": "[Voorbeeld] BV",
+      "peildatum": "2026-11-30",
+      "rekening_code": "610000",
+      "rekening_naam": "Diensten en diverse goederen",
+      "saldo": 67150.0
+    }
+  ]
+}
