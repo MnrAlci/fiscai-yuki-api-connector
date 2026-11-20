@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "fiscai-yuki-api-connector": {
+      "command": "/ABSOLUTE/PATH/TO/fiscai-yuki-api-connector/.venv/bin/python",
+      "args": [
+        "/ABSOLUTE/PATH/TO/fiscai-yuki-api-connector/server/run_server.py"
+      ],
+      "env": {
+        "YUKI_ACCESS_KEY": "YOUR_YUKI_ACCESS_KEY",
+        "YUKI_ACCESS_LEVEL": "domein"
+      }
+    }
+  }
+}
