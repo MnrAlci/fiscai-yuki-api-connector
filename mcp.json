@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "fiscai-yuki-api-connector": {
+      "type": "stdio",
+      "command": "python3",
+      "args": [
+        "./server/run_server.py"
+      ],
+      "env": {
+        "YUKI_ACCESS_KEY": "${YUKI_ACCESS_KEY}",
+        "YUKI_CACHE_KEY": "${YUKI_CACHE_KEY}",
+        "YUKI_ACCESS_LEVEL": "${YUKI_ACCESS_LEVEL}",
+        "YUKI_DAILY_LIMIT": "${YUKI_DAILY_LIMIT}",
+        "YUKI_DAILY_LIMIT_APPROVAL": "${YUKI_DAILY_LIMIT_APPROVAL}",
+        "YUKI_DOMAIN": "${YUKI_DOMAIN}",
+        "YUKI_WRITE_ENABLED": "${YUKI_WRITE_ENABLED}",
+        "YUKI_WRITE_TOKEN_TTL_MIN": "${YUKI_WRITE_TOKEN_TTL_MIN}",
+        "YUKI_WRITE_MAX_PER_DAY": "${YUKI_WRITE_MAX_PER_DAY}",
+        "YUKI_CREDITOR_SIGN": "${YUKI_CREDITOR_SIGN}",
+        "YUKI_BRAND_NAME": "${YUKI_BRAND_NAME}",
+        "YUKI_BRAND_COLOR": "${YUKI_BRAND_COLOR}",
+        "YUKI_BRAND_LOGO_PATH": "${YUKI_BRAND_LOGO_PATH}",
+        "YUKI_MAIL_SIGNATURE": "${YUKI_MAIL_SIGNATURE}"
+      }
+    }
+  }
+}
