@@ -25,6 +25,12 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 - Client guides (Grok Bot first, then Cursor, Claude Desktop, Claude Code, GitHub Copilot in VS Code, Windsurf, generic), integration guides (AgentMail, Hermes Agent, OpenClaw), visualisation and data-app guides (13 tools, two runnable examples), 10 document generators with example templates, data collection and automation guides, and an overview of 40 useful apps.
 - Business owner and accountant guides (EN/NL) with illustrations, two skills, `examples/` with placeholder-only configs, `pyproject.toml` with the console command `yuki-api-connector`.
 
+### Added (marketplace readiness)
+- `server.json` for the official MCP Registry (`io.github.MnrAlci/fiscai-yuki-api-connector`, PyPI package, stdio).
+- `glama.json` (maintainer claim) and `.claude-plugin/plugin.json` (Claude plugin directory; key stored as a sensitive user setting).
+- Console command `fiscai-yuki-api-connector` so `uvx fiscai-yuki-api-connector` starts the MCP server.
+- PyPI metadata: SPDX licence with LICENSE and NOTICE in the wheel, project URLs, keywords, classifiers.
+
 ### Safety
 - Workflow documents (purchase and sales) are refused as journal entries; they are finished in Yuki.
 - Write methods other than `Accounting.ProcessJournal` are always refused; keys never appear in files, logs or output.
@@ -35,3 +41,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ### Fixed
 - Element order of the SOAP requests for the period-based outstanding-item methods (`OutstandingDebtorItemsByDate`, `OutstandingCreditorItemsByDate`, `Outstanding{Debtor|Creditor}WithPaymentReference`) and `GetSuppliersAndCustomers` now follows the public WSDL (found by cross-checking the official Yuki Postman documentation); the Postman collection follows the same order.
+- Unfilled `${YUKI_...}` placeholders from MCP clients that do not substitute variables are now treated as "not set" instead of stopping the server at startup.
+- Cursor plugin manifest lists its agents, rules, skills and MCP server explicitly (with `${CURSOR_PLUGIN_ROOT}`), so the helper files in `agents/` are no longer picked up as agents.
+- Attribution line on the docs index, tool list, booking workflow and read-method inventory; Belgium notice on the docs index.
+- Removed an internal-edition office rule from the public skill.
