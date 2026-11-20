@@ -2,6 +2,11 @@
 
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+- `server.json` (MCP Registry) now points to the MCPB bundle attached to the GitHub release v1.0.0 (`registryType` `mcpb`, with `fileSha256`) instead of a PyPI package; there is no PyPI release.
+
 ## [1.0.0] - 2026-11-20
 
 ### Added
