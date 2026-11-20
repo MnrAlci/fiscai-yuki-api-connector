@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+dist/
+build/
+*.egg-info/
+.env
+.env.*
+*.env
+!.env.example
+yuki-export*/
+yuki-audit.log
+.DS_Store
+# Workflows: uitvoer bevat klantgegevens
+workflow-output/
+workflows.toml
