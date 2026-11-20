@@ -1,0 +1,117 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.MnrAlci/fiscai-yuki-api-connector",
+  "title": "FISCAi Yuki API Connector",
+  "description": "Read-only Yuki API for Belgian accountants. Powered by FISCALCI Accounting & Tax (Askin Alci)",
+  "repository": {
+    "url": "https://github.com/MnrAlci/fiscai-yuki-api-connector",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/MnrAlci/fiscai-yuki-api-connector",
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "fiscai-yuki-api-connector",
+      "version": "1.0.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "YUKI_ACCESS_KEY",
+          "description": "WebserviceAccessKey van Yuki (portaal- of domeinsleutel). Alias: YUKI_API_KEY. Geheim.",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true
+        },
+        {
+          "name": "YUKI_CACHE_KEY",
+          "description": "Optioneel: sterk geheim voor de lokale sessiecache. Zonder waarde wordt eenmalig een sleutel aangemaakt in de datamap (0600). Geheim.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true
+        },
+        {
+          "name": "YUKI_ACCESS_LEVEL",
+          "description": "portaal (accountantsportaal-sleutel, alle administraties) of domein (sleutel per domein). Standaard portaal.",
+          "isRequired": false,
+          "format": "string",
+          "default": "portaal",
+          "choices": [
+            "portaal",
+            "domein"
+          ]
+        },
+        {
+          "name": "YUKI_DAILY_LIMIT",
+          "description": "Maximum Yuki-calls per domein per dag (standaard 900). Yuki: 1000 calls per domein per dag zijn gratis. Boven 1000 alleen met YUKI_DAILY_LIMIT_APPROVAL.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_DAILY_LIMIT_APPROVAL",
+          "description": "Referentie van uw uitdrukkelijk akkoord om boven 1000 te gaan; er kunnen dan kosten volgen.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_DOMAIN",
+          "description": "Naam waarop calls zonder eigen domein geteld worden.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_WRITE_ENABLED",
+          "description": "Standaard uit. Alleen de waarde ja zet de optionele boekingsworkflow aan (journaalposten, telkens na uitdrukkelijke bevestiging per boeking).",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_WRITE_TOKEN_TTL_MIN",
+          "description": "Minuten (1 tot 60), standaard 15.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_WRITE_MAX_PER_DAY",
+          "description": "1 tot 100, standaard 25.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_CREDITOR_SIGN",
+          "description": "positief (standaard) of negatief: teken van te betalen crediteurenposten in uw dossier.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_BRAND_NAME",
+          "description": "Naam bovenaan dashboard en handleiding.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_BRAND_COLOR",
+          "description": "Hexkleur, bv. #1F4E79.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_BRAND_LOGO_PATH",
+          "description": "Lokaal PNG/JPG-bestand.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "YUKI_MAIL_SIGNATURE",
+          "description": "Tekst onder 'Met vriendelijke groeten,'.",
+          "isRequired": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
