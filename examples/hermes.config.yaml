@@ -1,0 +1,13 @@
+# ~/.hermes/config.yaml (Hermes Agent by Nous Research). Put the real values in ~/.hermes/.env, not here.
+# Format: https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference  (*verify current docs*)
+mcp_servers:
+  fiscai-yuki-api-connector:
+    command: "/ABSOLUTE/PATH/TO/fiscai-yuki-api-connector/.venv/bin/python"
+    args: ["/ABSOLUTE/PATH/TO/fiscai-yuki-api-connector/server/run_server.py"]
+    env:
+      YUKI_ACCESS_KEY: "${YUKI_ACCESS_KEY}"
+      YUKI_ACCESS_LEVEL: "domein"
+  agentmail:
+    url: "https://mcp.agentmail.to/mcp"
+    headers:
+      x-api-key: "${AGENTMAIL_API_KEY}"
