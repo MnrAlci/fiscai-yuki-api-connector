@@ -1,0 +1,28 @@
+{
+  "mcp": {
+    "servers": {
+      "fiscai-yuki-api-connector": {
+        "command": "/ABSOLUTE/PATH/TO/fiscai-yuki-api-connector/.venv/bin/python",
+        "args": [
+          "/ABSOLUTE/PATH/TO/fiscai-yuki-api-connector/server/run_server.py"
+        ],
+        "env": {
+          "YUKI_ACCESS_KEY": "${YUKI_ACCESS_KEY}",
+          "YUKI_ACCESS_LEVEL": "domein"
+        }
+      },
+      "agentmail": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "agentmail-mcp",
+          "--tools",
+          "list_inboxes,create_draft,send_message"
+        ],
+        "env": {
+          "AGENTMAIL_API_KEY": "${AGENTMAIL_API_KEY}"
+        }
+      }
+    }
+  }
+}
